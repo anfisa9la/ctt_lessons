@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<TestSuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/scripts.xsd" name="Suite.xml" description="" globalSettingsFile="Settings/DefaultSettings.xml">
+  <TestCase description="" name="Test">
+    <workpath>Tests/Test</workpath>
+  </TestCase>
+</TestSuite>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<GlobalSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="DefaultSettings.xml" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/globalSettings.xsd">
+    <Resources>
+        <SoapHttpEndpoint address="http://fx-option.apps.ocp.cmx.ru/MockCreate"
+                          objName="endpoint1"/>
+    </Resources>
+</GlobalSettings>

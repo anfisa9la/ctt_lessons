@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Incoming message validation. valid xml" 
+	name="Block_1_positive" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+	
+   <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+    		<!--
+    			Тест-Кейс:
+    			1. Сохраняем валидный xml в переменную
+          		2. Отправляем запрос к soap/http сервису с валидным телом
+          		3. Записывает ответ в переменную
+    			4. Сравниваем фактический ответ с ожидаемым
+    		-->
+    		
+    
+    <GetTemplate path="Templates/ex1_msg1_valid.xml" variable="input_xml"/>
+    <GetTemplate path="Templates/ex1_resp1_validation_success.xml" variable="expected_result"/>
+    
+	<RunSOAPHttpRequest operationName="create">
+      <SoapHttpEndpoint objName="endpoint1"/>
+      <request variable="input_xml"/>
+      <response variable="response"/>
+    </RunSOAPHttpRequest>
+
+    <AssertXmlEqual>
+      <actual variable='response'></actual>
+      <expected variable='expected_result'></expected>
+    </AssertXmlEqual> 
+	
+</Test>
