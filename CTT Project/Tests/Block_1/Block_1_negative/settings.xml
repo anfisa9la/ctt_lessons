@@ -28,6 +28,9 @@
     <AssertXmlEqual>
       <actual variable='response'></actual>
       <expected variable='expected_result'></expected>
+    <exclude logLevel="error">
+        <mnemonic mnemonicType="XPATH" name="/soapenv:Envelope/soapenv:Body/soapenv:Fault/detail/text()"/>
+    </exclude>
     </AssertXmlEqual> 
-	
+
 </Test>
