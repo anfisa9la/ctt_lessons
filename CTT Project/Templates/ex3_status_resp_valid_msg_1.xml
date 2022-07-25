@@ -1,0 +1,4 @@
+MD            яяяя      ё  MQHRF2        AMQ QMTESTERS1  нбwVE                                                                             QMTESTERS1                                      mqm                                                                                                        2016020407165942                                       яяяяRFH       А    ёMQSTR         ё    <mcd><Msd>jms_text</Msd></mcd>     P<jms><Dst>queue:///TASK3.RESP</Dst><Tms>1454564834438</Tms><Dlv>2</Dlv></jms>       <usr><ERROR>NULL</ERROR></usr>  <Transaction-Result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Transaction-Result.xsd">
+	<TimeStamp>2016-02-04T09:47:14Z</TimeStamp>
+	<Validation-Result>org.custommonkey.xmlunit.Validator@11d1c6b5:[valid]</Validation-Result>
+</Transaction-Result>

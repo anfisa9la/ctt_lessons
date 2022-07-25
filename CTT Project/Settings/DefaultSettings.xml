@@ -4,5 +4,12 @@
     <Resources>
         <SoapHttpEndpoint address="http://fx-option.apps.ocp.cmx.ru/MockCreate"
                           objName="endpoint1"/>
+                          
+        <QueueManager channel="SYSTEM.DEF.SVRCONN" host="192.168.15.74" name="QMTESTERS1" objName="QM" port="4401">
+        	<ccsid>1208</ccsid>
+    	</QueueManager>
+    	<Queue manager="QM" objName="IN" queue="TMP.TASK2.IN"/>
+    	<Queue manager="QM" objName="OUT" queue="TMP.TASK2.OUT"/>
+    	<Queue manager="QM" objName="RESP" queue="TMP.TASK2.RESP"/>
     </Resources>
 </GlobalSettings>

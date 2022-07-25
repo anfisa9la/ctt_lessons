@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	description="Incoming message validation. invalid xml" 
-	name="Block_1_negative" 
-	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
-	
-   <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" description="Преобразование входящего сообщения в формат исходящего сообщения" name="Block_2_positive" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
 
-    		<!--
-    			Тест-Кейс:
-    			1. Сохраняем невалидный xml в переменную
-          		2. Отправляем запрос к soap/http сервису с невалидным телом
-          		3. Записывает ответ в переменную
-    			4. Сравниваем фактический ответ с ожидаемым
-    		-->
-    		
-    
-    <GetTemplate path="Templates/ex1_msg1_invalid.xml" variable="input_xml"/>
-    <GetTemplate path="Templates/ex1_resp1_validation_error.xml" variable="expected_result"/>
-    
-	<RunSOAPHttpRequest operationName="create">
-      <SoapHttpEndpoint objName="endpoint1"/>
-      <request variable="input_xml"/>
-      <response variable="response"/>
-    </RunSOAPHttpRequest>
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
 
-    <AssertXmlEqual>
-      <actual variable='response'></actual>
-      <expected variable='expected_result'></expected>
-    <exclude logLevel="error">
-        <mnemonic mnemonicType="XPATH" name="//@detail"/>
-    </exclude>
-    </AssertXmlEqual> 
-	
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файлы для отправки и сравнения в переменные 
+  2. Отправляем сообщение в очередь, оно валидируется и отправляется сообщение в другое очередь
+  3. Получаем сообщение из очереди исходящих сообщений OUT
+  4. Валидируем исходящее сообщение
+  5. Получаем сообщение из очереди о результатах валидации RESP
+  6. Валидируем полученное сообщение -->
+
+  <GetTemplate path="Templates/ex2_msg1.xml" variable="xml_to_send"/>
+  <GetTemplate path="Templates/ex2_out_response_msg_1.xml" variable="OUT_expected_result"/>
+  <GetTemplate path="Templates/ex2_status_resp_valid_msg_1.xml" variable="RESP_expected_result"/>
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="IN"/>
+    <Queue objName="OUT"/>
+    <Queue objName="RESP"/>
+  </ClearQueue>
+
+  <Log level="info">==========@ Отправка сообщения.</Log>
+  <SendMessage variable="xml_to_send">
+    <Queue objName="IN"/>
+  </SendMessage>
+
+  <Log level="info">==========@ Получение сообщения из TASK2.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="OUT_message">
+    <Queue objName="OUT"/>
+  </GetMessageSimple>
+
+  <Log level="info">==========@ Получение сообщения из TASK2.RESP.</Log>
+  <GetMessageSimple maxTime="10000" variable="RESP_message">
+    <Queue objName="RESP"/>
+  </GetMessageSimple>
+  
+
+  <Log level="info">==========@ Проверка сообщения из TASK2.OUT.</Log>
+  <AssertXmlEqual>
+    <actual variable='OUT_message'></actual>
+    <expected variable='OUT_expected_result'></expected>
+  </AssertXmlEqual> 
+
+
+  <Log level="info">==========@ Проверка сообщения из TASK2.RESP.</Log>
+  <AssertXmlEqual>
+    <actual variable='RESP_message'></actual>
+    <expected variable='RESP_expected_result'></expected>
+  </AssertXmlEqual> 
+
 </Test>

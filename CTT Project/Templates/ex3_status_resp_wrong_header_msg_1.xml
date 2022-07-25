@@ -1,0 +1,4 @@
+MD            яяяя      ё  MQHRF2        AMQ QMTESTERS1  нбwV0H                                                                             QMTESTERS1                                      mqm                                                                                                        2016020407502464                                       яяяяRFH       Ф    ёMQSTR         ё    <mcd><Msd>jms_text</Msd></mcd>     P<jms><Dst>queue:///TASK3.RESP</Dst><Tms>1454566839710</Tms><Dlv>2</Dlv></jms>      4<usr><ERROR>Invalid or Empty Header</ERROR></usr>   <Transaction-Result xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="Transaction-Result.xsd">
+	<TimeStamp>2016-02-04T10:20:39Z</TimeStamp>
+	<Validation-Result>Parsing Error: Header values either invalid or empty</Validation-Result>
+</Transaction-Result>
