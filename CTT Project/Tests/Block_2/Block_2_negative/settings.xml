@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" description="Преобразование входящего сообщения в формат исходящего сообщения" name="Block_2_negative" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файлы для отправки (invalid) и сравнения в переменные 
+  2. Отправляем сообщение в очередь, оно валидируется (неуспешно)
+  3. Получаем сообщение из очереди о результатах валидации RESP
+  4. Валидируем полученное сообщение
+  5. Проверяем, что очередь исходящих сообщений пустая -->
+
+  <GetTemplate path="Templates/ex2_msg1_invalid.xml" variable="xml_to_send"/>
+  <GetTemplate path="Templates/ex2_out_response_msg_1.xml" variable="OUT_expected_result"/>
+  <GetTemplate path="Templates/ex2_status_resp_invalid_msg_1.xml" variable="RESP_expected_result"/>
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="IN"/>
+    <Queue objName="OUT"/>
+    <Queue objName="RESP"/>
+  </ClearQueue>
+
+  <Log level="info">==========@ Отправка сообщения.</Log>
+  <SendMessage variable="xml_to_send">
+    <Queue objName="IN"/>
+  </SendMessage>
+
+
+  <Log level="info">==========@ Получение сообщения из TASK2.RESP.</Log>
+  <GetMessageSimple maxTime="10000" variable="RESP_message">
+    <Queue objName="RESP"/>
+  </GetMessageSimple>
+  
+
+
+  <Log level="info">==========@ Проверка сообщения из TASK2.RESP.</Log>
+  <AssertXmlEqual>
+    <actual variable='RESP_message'></actual>
+    <expected variable='RESP_expected_result'></expected>
+  </AssertXmlEqual> 
+  
+	<CheckQueueIsEmpty>
+		<Queue objName="OUT"/>
+	</CheckQueueIsEmpty>
+
+</Test>
