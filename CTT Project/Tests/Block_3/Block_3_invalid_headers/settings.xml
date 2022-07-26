@@ -2,7 +2,7 @@
 
 <Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	description="Работа с заголовками сообщений" 
-	name="Block_3_positive" 
+	name="Block_3_invalid_headers" 
 	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
 
   <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
@@ -14,7 +14,7 @@
   3. Получаем сообщение из очереди исходящих сообщений OUT
   4. Валидируем исходящее сообщение
   5. Получаем сообщение из очереди о результатах валидации RESP
-  6. Валидируем полученное сообщение: usr.ERROR=NULL и valid -->
+  6. Валидируем полученное сообщение: usr.ERROR=Invalid or Empty Header и Parsing Error: Header values either invalid or empty -->
 
   <GetTemplate path="Templates/ex3_msg_with_headers.xml" variable="valid_xml"/>
 
@@ -31,16 +31,11 @@
     <Queue objName="TASK3.IN"/>
     <set>
         <rfh2>
-            <setStringProperty name="System" value="CRM"/>
+            <setStringProperty name="System" value="UNSUPPORTED_VALUE"/>
             <setStringProperty name="TypeRequest" value="client"/>
         </rfh2>
     </set>
 </SendMessage>
-
-  <Log level="info">==========@ Получение сообщения из TASK3.OUT.</Log>
-  <GetMessageSimple maxTime="10000" variable="OUT_message">
-    <Queue objName="TASK3.OUT"/>
-  </GetMessageSimple>
 
 
   <Log level="info">==========@ Получение сообщения из TASK3.RESP.</Log>
@@ -53,9 +48,6 @@
     </get>
   </GetMessageSimple>
 
-  <Log level="info">==========@ Проверка сообщения из TASK3.OUT.</Log>
-	<ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="OUT_message"/>
-
 
   <Log level="info">==========@ Проверка сообщения из TASK3.RESP.</Log>
 	<ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="RESP_message"/>
@@ -64,12 +56,19 @@
   
   
 	<Log level="info">==========@ Проверка заголовка сообщения из TASK3.RESP.</Log>
-  <AssertEquals value="NULL" variable="error_header"/>
+  <AssertEquals value="Invalid or Empty Header" variable="error_header"/>
+  
+  
   
   <Log level="info">==========@ Проверка содержания сообщения из TASK3.RESP.</Log>
   <PutVariable mnemonic="validation_result" name="is_valid" variable="RESP_message"/>
 	
   <Match mnemonic="contains_valid"
        mnemonicType="REGEXP" variable="is_valid"/>
+       
+  <Log level="info">==========@ Проверка TASK3.OUT.</Log>
+	<CheckQueueIsEmpty>
+		<Queue objName="TASK3.OUT"/>
+	</CheckQueueIsEmpty>
 
 </Test>
