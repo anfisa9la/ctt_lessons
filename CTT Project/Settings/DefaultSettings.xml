@@ -10,5 +10,9 @@
     	<Queue manager="QM" objName="IN" queue="TMP.TASK2.IN"/>
     	<Queue manager="QM" objName="OUT" queue="TMP.TASK2.OUT"/>
     	<Queue manager="QM" objName="RESP" queue="TMP.TASK2.RESP"/>
+    	
+    	    <Queue manager="QM" objName="3.IN" queue="TMP.TASK3.IN"/>
+    	<Queue manager="QM" objName="3.OUT" queue="TMP.TASK3.OUT"/>
+    	<Queue manager="QM" objName="3.RESP" queue="TMP.TASK3.RESP"/>
     </Resources>
 </GlobalSettings>
