@@ -23,6 +23,7 @@
     <Queue objName="OUT"/>
     <Queue objName="RESP"/>
   </ClearQueue>
+  
 
   <Log level="info">==========@ Отправка сообщения.</Log>
   <SendMessage variable="xml_to_send">
@@ -38,10 +39,7 @@
 
 
   <Log level="info">==========@ Проверка сообщения из TASK2.RESP.</Log>
-  <AssertXmlEqual>
-    <actual variable='RESP_message'></actual>
-    <expected variable='RESP_expected_result'></expected>
-  </AssertXmlEqual> 
+	<ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="RESP_message"/>
   
 	<CheckQueueIsEmpty>
 		<Queue objName="OUT"/>

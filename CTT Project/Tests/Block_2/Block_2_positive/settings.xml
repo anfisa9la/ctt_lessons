@@ -42,16 +42,10 @@
   
 
   <Log level="info">==========@ Проверка сообщения из TASK2.OUT.</Log>
-  <AssertXmlEqual>
-    <actual variable='OUT_message'></actual>
-    <expected variable='OUT_expected_result'></expected>
-  </AssertXmlEqual> 
+	<ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="OUT_message"/>
 
 
   <Log level="info">==========@ Проверка сообщения из TASK2.RESP.</Log>
-  <AssertXmlEqual>
-    <actual variable='RESP_message'></actual>
-    <expected variable='RESP_expected_result'></expected>
-  </AssertXmlEqual> 
+	<ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="RESP_message"/>
 
 </Test>
