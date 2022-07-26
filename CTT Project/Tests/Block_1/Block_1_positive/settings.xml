@@ -19,10 +19,16 @@
     <GetTemplate path="Templates/ex1_msg1_valid.xml" variable="input_xml"/>
     <GetTemplate path="Templates/ex1_resp1_validation_success.xml" variable="expected_result"/>
     
+    <ValidateAgainstWSDL isRequest="true" operationName="create"
+                     variable="input_xml" wsdlPath="WSDL\Block1.fxOption\fxOption_1.wsdl"/>
+    
 	<RunSOAPHttpRequest operationName="create">
       <SoapHttpEndpoint objName="endpoint1"/>
       <request variable="input_xml"/>
       <response variable="response"/>
+      <httpHeaders>
+            <httpHeader name="SOAPAction" value="&quot;create&quot;"/>
+      </httpHeaders>
     </RunSOAPHttpRequest>
 
     <AssertXmlEqual>

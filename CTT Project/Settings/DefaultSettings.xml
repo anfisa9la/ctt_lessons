@@ -2,8 +2,7 @@
 
 <GlobalSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="DefaultSettings.xml" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/globalSettings.xsd">
     <Resources>
-        <SoapHttpEndpoint address="http://fx-option.apps.ocp.cmx.ru/MockCreate"
-                          objName="endpoint1"/>
+        <SoapHttpEndpoint address="http://192.168.15.100:8086" objName="endpoint1"/>
                           
         <QueueManager channel="SYSTEM.DEF.SVRCONN" host="192.168.15.74" name="QMTESTERS1" objName="QM" port="4401">
         	<ccsid>1208</ccsid>

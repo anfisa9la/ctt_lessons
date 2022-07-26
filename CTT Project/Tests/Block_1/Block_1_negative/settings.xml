@@ -19,18 +19,25 @@
     <GetTemplate path="Templates/ex1_msg1_invalid.xml" variable="input_xml"/>
     <GetTemplate path="Templates/ex1_resp1_validation_error.xml" variable="expected_result"/>
     
-	<RunSOAPHttpRequest operationName="create">
+    <Scope logLevel="info">
+    	<ValidateAgainstWSDL isRequest="true" operationName="create"
+                variable="input_xml" wsdlPath="WSDL\Block1.fxOption\fxOption_1.wsdl"/>
+    </Scope>
+    
+<RunSOAPHttpRequest operationName="create">
       <SoapHttpEndpoint objName="endpoint1"/>
       <request variable="input_xml"/>
       <response variable="response"/>
+      <httpHeaders>
+            <httpHeader name="SOAPAction" value="&quot;create&quot;"/>
+      </httpHeaders>
     </RunSOAPHttpRequest>
+    
+    <Log>#response#</Log>
 
     <AssertXmlEqual>
       <actual variable='response'></actual>
       <expected variable='expected_result'></expected>
-    <exclude logLevel="error">
-        <mnemonic mnemonicType="XPATH" name="/soapenv:Envelope/soapenv:Body/soapenv:Fault/detail/text()"/>
-    </exclude>
     </AssertXmlEqual> 
 	
 </Test>
