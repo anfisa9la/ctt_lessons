@@ -60,11 +60,8 @@
   
   
   
-  <Log level="info">==========@ Проверка содержания сообщения из TASK3.RESP.</Log>
-  <PutVariable mnemonic="validation_result" name="is_valid" variable="RESP_message"/>
-	
-  <Match mnemonic="contains_valid"
-       mnemonicType="REGEXP" variable="is_valid"/>
+  <Log level="info">==========@ Проверка содержания сообщения из TASK3.RESP.</Log>	
+  <Match mnemonic="contains_valid" variable="RESP_message"/>
        
   <Log level="info">==========@ Проверка TASK3.OUT.</Log>
 	<CheckQueueIsEmpty>

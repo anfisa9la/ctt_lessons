@@ -11,8 +11,14 @@
     	<Queue manager="QM" objName="OUT" queue="TMP.TASK2.OUT"/>
     	<Queue manager="QM" objName="RESP" queue="TMP.TASK2.RESP"/>
     	
-    	    <Queue manager="QM" objName="TASK3.IN" queue="TMP.TASK3.IN"/>
+    	<Queue manager="QM" objName="TASK3.IN" queue="TMP.TASK3.IN"/>
     	<Queue manager="QM" objName="TASK3.OUT" queue="TMP.TASK3.OUT"/>
     	<Queue manager="QM" objName="TASK3.RESP" queue="TMP.TASK3.RESP"/>
+    	
+    	<Queue manager="QM" objName="TASK4.IN" queue="TMP.TASK4.IN"/>
+    	<Queue manager="QM" objName="TASK4.OUT" queue="TMP.TASK4.OUT"/>
+    	<Queue manager="QM" objName="TASK4.TO.EXTERNAL.SYSTEM" queue="TMP.TASK4.TO.EXTERNAL.SYSTEM"/>
+    	<Queue manager="QM" objName="TASK4.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK4.FROM.EXTERNAL.SYSTEM"/>
     </Resources>
+    <LoadRegexp encoding="UTF-8" path="/Mnemonics/Regexp/regexp.txt"/>
 </GlobalSettings>

@@ -63,13 +63,11 @@
   <Log>#RESP_message#</Log>
   
   
-	<Log level="info">==========@ Проверка заголовка сообщения из TASK3.RESP.</Log>
+  <Log level="info">==========@ Проверка заголовка сообщения из TASK3.RESP.</Log>
   <AssertEquals value="NULL" variable="error_header"/>
   
   <Log level="info">==========@ Проверка содержания сообщения из TASK3.RESP.</Log>
-  <PutVariable mnemonic="validation_result" name="is_valid" variable="RESP_message"/>
 	
-  <Match mnemonic="contains_valid"
-       mnemonicType="REGEXP" variable="is_valid"/>
+  <Match mnemonic="contains_valid" variable="RESP_message"/>
 
 </Test>

@@ -1,2 +1,2 @@
-cointains_valid=\bvalid\b
+contains_valid=\bvalid\b
 empty_header_error=\bParsing Error: Header values either invalid or empty\b
