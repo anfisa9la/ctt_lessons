@@ -21,6 +21,13 @@
     	<Queue manager="QM" objName="TASK4.ERROR" queue="TMP.TASK4.ERROR"/>
     	<Queue manager="QM" objName="TASK4.TO.EXTERNAL.SYSTEM" queue="TMP.TASK4.TO.EXTERNAL.SYSTEM"/>
     	<Queue manager="QM" objName="TASK4.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK4.FROM.EXTERNAL.SYSTEM"/>
+    	
+    	<Queue manager="QM" objName="TASK5.IN" queue="TMP.TASK5.IN"/>
+    	<Queue manager="QM" objName="TASK5.OUT" queue="TMP.TASK5.OUT"/>
+    	<Queue manager="QM" objName="TASK5.STORE" queue="TMP.TASK5.STORE"/>
+    	<Queue manager="QM" objName="TASK5.ERROR" queue="TMP.TASK5.ERROR"/>
+    	<Queue manager="QM" objName="TASK5.TO.EXTERNAL.SYSTEM" queue="TMP.TASK5.TO.EXTERNAL.SYSTEM"/>
+    	<Queue manager="QM" objName="TASK5.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK5.FROM.EXTERNAL.SYSTEM"/>
     </Resources>
     <LoadRegexp encoding="UTF-8" path="/Mnemonics/Regexp/regexp.txt"/>
 </GlobalSettings>

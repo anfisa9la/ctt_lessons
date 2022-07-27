@@ -93,7 +93,7 @@
   <SendMessage variable="message_from_external_system">
     <Queue objName="TASK4.FROM.EXTERNAL.SYSTEM"/>
     <set>
-        <mqmd header="CorrelationId" variable="#message_1_correl_Id#"/>
+        <mqmd header="CorrelationId" variable="message_1_correl_Id"/>
     </set>
   </SendMessage>
   
@@ -105,6 +105,17 @@
   
   
   <Log level="info">==========@ Проверка наличия всего одного сообщения в TASK4.STORE.</Log>
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK4.STORE"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 1">
+    <Log level='fatal'>В очереди TASK4.STORE более одного сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди TASK4.STORE одно сообщение </Log>
+  </ELSE>
+  
   
   <Log level="info">==========@ Проверка CorrelationId = #message_2_correl_Id# для сообщения в TASK4.STORE.</Log>
   <BrowseQueue encoding="UTF-8" notSave="false" maxTime="10000">
