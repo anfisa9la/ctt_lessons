@@ -11,17 +11,20 @@
   Тест-Кейс: 
   1. Сохраняем файлы для отправки в переменные 
   2. Отправляем первое валидное сообщение в очередь TASK4.IN
-  3. Отправляем второе валидное сообщение в очередь TASK4.IN
-  4. Получаем два сообщения из очереди TASK4.TO.EXTERNAL.SYSTEM
-  5. Валидируем оба сообщения
-  6. Проверяем наличие сообщений в очереди TASK4.STORE
-  7. Сохраняем CorrelId из запроса к внешней системе
-  8. Проставляем CorrelId в сообшение и отправляем его в TASK4.FROM.EXTERNAL.SYSTEM
-  9. Получаем и проверяем сообщение из TASK4.OUT
-  10. Получаем сообщение из TASK4.STORE и сравниваем его с сообщением 3 -->
+  3. Получаем первое сообщение из очереди TASK4.TO.EXTERNAL.SYSTEM
+  4. Отправляем второе валидное сообщение в очередь TASK4.IN
+  5. Получаем первое сообщение из очереди TASK4.TO.EXTERNAL.SYSTEM
+  6. Валидируем оба сообщения
+  7. Проверяем наличие сообщений в очереди TASK4.STORE
+  8. Сохраняем CorrelId из запроса к внешней системе
+  9. Проставляем CorrelId в сообшение и отправляем его в TASK4.FROM.EXTERNAL.SYSTEM
+  10. Получаем и проверяем сообщение из TASK4.OUT
+  11. Получаем сообщение из TASK4.STORE и сравниваем его с сообщением 3 -->
 
   <GetTemplate path="Templates/ex4_msg1.xml" variable="valid_xml_1"/>
   <GetTemplate path="Templates/ex4_msg2.xml" variable="valid_xml_2"/>
+  <GetTemplate path="Templates/ex4_answer_from_system.xml" variable="message_from_external_system"/>
+  
   
   <Log level="info">==========@ Валидация двух отправляемый в сервис сообщений.</Log>
   <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="valid_xml_1"/>
@@ -42,27 +45,73 @@
     <Queue objName="TASK4.IN"/>
   </SendMessage>
   
-  <GetMessageSimple maxTime="10000" variable="in_message_1">
-    <Queue objName="TASK4.IN"/>
+  <Log level="info">==========@ Получение первого сообщения из TASK4.TO.EXTERNAL.SYSTEM.</Log>
+  <GetMessageSimple maxTime="10000" variable="message_1">
+    <Queue objName="TASK4.TO.EXTERNAL.SYSTEM"/>
+        <get>
+        <mqmds>
+            <mqmd header="CorrelationID" variable="message_1_correl_Id"/>
+        </mqmds>
+    </get>
   </GetMessageSimple>
   
-   <ClearQueue clearMethod="CLEAR">
-    <Queue objName="TASK4.TO.EXTERNAL.SYSTEM"/>
-  </ClearQueue>
+  <Log level="info">==========@ CorrelationId первого сообщения - #message_1_correl_Id#.</Log>
   
   <Log level="info">==========@ Отправка второго сообщения в TASK4.IN.</Log>
   <SendMessage variable="valid_xml_2">
     <Queue objName="TASK4.IN"/>
   </SendMessage>
   
-  <GetMessageSimple maxTime="10000" variable="in_message_2">
+  <Log level="info">==========@ Получение второго сообщения из TASK4.TO.EXTERNAL.SYSTEM.</Log>
+  <GetMessageSimple maxTime="10000" variable="message_2">
     <Queue objName="TASK4.TO.EXTERNAL.SYSTEM"/>
+        <get>
+        <mqmds>
+            <mqmd header="CorrelationID" variable="message_2_correl_Id"/>
+        </mqmds>
+    </get>
   </GetMessageSimple>
   
+  <Log level="info">==========@ CorrelationId второго сообщения - #message_2_correl_Id#.</Log>
 
   <Log level="info">==========@ Валиация сообщений в очереди TASK4.TO.EXTERNAL.SYSTEM.</Log>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="in_message_1"/>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="in_message_2"/>
-
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="message_1"/>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="message_2"/>
+  
+  <Log level="info">==========@ Просмотр сообщений из очереди TASK4.STORE по CorrelationId.</Log>
+  <BrowseQueue encoding="UTF-8" notSave="false" maxTime="10000">
+    <Queue objName="TASK4.STORE"/>
+    <Message variable="store_message_1">
+        <mqmd header="CorrelationId" value="#message_1_correl_Id#"/>
+    </Message>
+    <Message variable="store_message_2">
+        <mqmd header="CorrelationId" value="#message_2_correl_Id#"/>
+    </Message>
+  </BrowseQueue>
+  
+  <Log level="info">==========@ Отправка сообщения в TASK4.FROM.EXTERNAL.SYSTEM с CorrelationId = #message_1_correl_Id#.</Log>
+  <SendMessage variable="message_from_external_system">
+    <Queue objName="TASK4.FROM.EXTERNAL.SYSTEM"/>
+    <set>
+        <mqmd header="CorrelationId" variable="#message_1_correl_Id#"/>
+    </set>
+  </SendMessage>
+  
+  <Log level="info">==========@  Проверяем сообщение в очереди TASK4.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="message_out">
+    <Queue objName="TASK4.OUT"/>
+  </GetMessageSimple>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="message_out"/>
+  
+  
+  <Log level="info">==========@ Проверка наличия всего одного сообщения в TASK4.STORE.</Log>
+  
+  <Log level="info">==========@ Проверка CorrelationId = #message_2_correl_Id# для сообщения в TASK4.STORE.</Log>
+  <BrowseQueue encoding="UTF-8" notSave="false" maxTime="10000">
+    <Queue objName="TASK4.STORE"/>
+    <Message variable="message_out">
+        <mqmd header="CorrelationId" value="#message_2_correl_Id#"/>
+    </Message>
+  </BrowseQueue>
 
 </Test>

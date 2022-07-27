@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Механизм корреляции сообщений при работе с асинхронным сервисом/адаптером" 
+	name="Block_4_positive" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файлы для отправки в переменные 
+  2. Отправляем валидное сообщение в очередь TASK4.IN
+  3. Получаем сообщение из очереди TASK4.TO.EXTERNAL.SYSTEM
+  4. Валидируем сообщение на наличие CorrellationId
+  5. Проверяем наличие сообщений в очереди TASK4.STORE
+  6. Проставляем невалидный CorrelId в сообщение и отправляем его в TASK4.FROM.EXTERNAL.SYSTEM
+  7. Получаем и проверяем сообщение из TASK4.ERROR -->
+
+  <GetTemplate path="Templates/ex4_msg1.xml" variable="valid_xml"/>
+  <GetTemplate path="Templates/ex4_answer_from_system.xml" variable="message_from_external_system"/>
+  
+  
+  
+  <Log level="info">==========@ Валидация сообщений.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="valid_xml"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK4.IN"/>
+    <Queue objName="TASK4.TO.EXTERNAL.SYSTEM"/>
+    <Queue objName="TASK4.STORE"/>
+    <Queue objName="TASK4.ERROR"/>
+    <Queue objName="TASK4.FROM.EXTERNAL.SYSTEM"/>
+  </ClearQueue>
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK4.IN.</Log>
+  <SendMessage variable="valid_xml">
+    <Queue objName="TASK4.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK4.TO.EXTERNAL.SYSTEM.</Log>
+  <GetMessageSimple maxTime="10000" variable="message">
+    <Queue objName="TASK4.TO.EXTERNAL.SYSTEM"/>
+        <get>
+        <mqmds>
+            <mqmd header="CorrelationID" variable="message_correl_Id"/>
+        </mqmds>
+    </get>
+  </GetMessageSimple>
+  
+  
+  <Log level="info">==========@ CorrelationId сообщения - #message_correl_Id#.</Log>
+  
+
+  <Log level="info">==========@ Валиация message в очереди TASK4.TO.EXTERNAL.SYSTEM.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="message"/>
+  
+  
+  <Log level="info">==========@ Просмотр сообщений из очереди TASK4.STORE по CorrelationId.</Log>
+  <BrowseQueue encoding="UTF-8" notSave="false" maxTime="10000">
+    <Queue objName="TASK4.STORE"/>
+    <Message variable="store_message_1">
+        <mqmd header="CorrelationId" value="#message_correl_Id#"/>
+    </Message>
+  </BrowseQueue>
+  
+  
+  <Log level="info">==========@ Отправка сообщения в TASK4.FROM.EXTERNAL.SYSTEM с CorrelationId != #message_correl_Id#.</Log>
+  <PutVariable name="invalid_id" value="123"/>
+  
+  <SendMessage variable="message_from_external_system">
+    <Queue objName="TASK4.FROM.EXTERNAL.SYSTEM"/>
+    <set>
+        <mqmd header="CorrelationId" variable="invalid_id"/>
+    </set>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@  Проверяем сообщение в очереди TASK4.ERROR.</Log>
+  <GetMessageSimple maxTime="10000" variable="message_out">
+    <Queue objName="TASK4.ERROR"/>
+     <get>
+        <rfh2>
+            <getStringProperty name="ERROR" variable="error_header"/>
+        </rfh2>
+    </get>
+  </GetMessageSimple>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="message_out"/>
+  
+   <Log level="info">==========@ Проверка заголовка сообщения из TASK4.ERROR.</Log>
+  <AssertEquals value="Not found message in store" variable="error_header"/>
+  
+  
+</Test>
