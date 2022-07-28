@@ -51,7 +51,7 @@
 
 
   <Log level="info">==========@ Валиация сообщения в очереди TASK5.TO.EXTERNAL.SYSTEM.</Log>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="message"/>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Ask-For-Permission.xsd" variable="message_to_ext_system"/>
   
   
   <Wait time="61000"/>
@@ -62,7 +62,9 @@
   </GetMessageSimple>
   <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="message_out"/>
   
+  <Log>#message_out#</Log>
+  
   <Log level="info">==========@ Проверка содержания сообщения из TASK5.ERROR.</Log>	
-  <Match mnemonic="no_answer_from_system_error" variable="message_out"/>
+  <Match mnemonic="no_answer_error" variable="message_out"/>
 
 </Test>

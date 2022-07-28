@@ -63,7 +63,7 @@
         <mqmd header="CorrelationId" value="#correl_Id#"/>
     </Message>
   </BrowseQueue>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="message_store"/>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message_store"/>
   
 
   
@@ -71,7 +71,7 @@
   <SendMessage variable="valid_message_from_ext_system">
     <Queue objName="TASK5.FROM.EXTERNAL.SYSTEM"/>
     <set>
-        <mqmd header="CorrelationId" variable="#correl_Id#"/>
+        <mqmd header="CorrelationId" variable="correl_Id"/>
     </set>
   </SendMessage>
   
@@ -80,6 +80,6 @@
   <GetMessageSimple maxTime="10000" variable="message_out">
     <Queue objName="TASK5.OUT"/>
   </GetMessageSimple>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="message_out"/>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="message_out"/>
 
 </Test>

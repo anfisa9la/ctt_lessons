@@ -1,2 +1,3 @@
 validation_result=/Transaction-Result/Validation-Result
 TimeStamp=/Transaction-Details/TimeStamp
+TimeStamp_error_mes=/Transaction-Result/TimeStamp
