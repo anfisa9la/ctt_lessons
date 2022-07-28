@@ -33,17 +33,13 @@
   
   <Log level="info">==========@ Получение сообщения из TASK7.ERROR.</Log>
   <GetMessageSimple maxTime="10000" variable="error_message">
-    <Queue objName="TASK7.OUT"/>
+    <Queue objName="TASK7.ERROR"/>
   </GetMessageSimple>
   
-
+	<Log>#error_message#</Log>
 
   <Log level="info">==========@ Валиация сообщения в очереди TASK7.ERROR.</Log>
-  
-  <AssertXmlEqual order="false">
-    <actual variable="error_message"/>
-    <expected variable="resp_expected"/>
-  </AssertXmlEqual>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="error_message"/>
   
 
 </Test>

@@ -37,20 +37,20 @@
   
   
   <Log level="info">==========@ Получение сообщения из TASK7.OUT.</Log>
-  <GetMessageSimple maxTime="10000" variable="error_message">
+  <GetMessageSimple maxTime="10000" variable="out_message">
     <Queue objName="TASK7.OUT"/>
   </GetMessageSimple>
   
-	<Log>#error_message#</Log>
+	<Log>#out_message#</Log>
 
   <Log level="info">==========@ Валиация сообщения в очереди TASK7.OUT.</Log>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="error_message"/>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
   
   <AssertXmlEqual order="false">
-    <actual variable="error_message"/>
+    <actual variable="out_message"/>
     <expected variable="resp_expected"/>
     <exclude logLevel="info">
-        <mnemonic name="TimeStamp"/>    
+        <mnemonic mnemonicType="MNEMONIC" name="TimeStamp"/>    
     </exclude>
   </AssertXmlEqual>
   
