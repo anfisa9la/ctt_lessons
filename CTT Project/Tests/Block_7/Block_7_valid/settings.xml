@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Обработка ошибок от внешней системы" 
+	name="Block_7_error" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK7.IN
+  3. Получаем сообщение из очереди TASK7.OUT и валидируем его
+    -->
+
+  <GetTemplate path="Templates/ex7_msg_valid_code.xml" variable="message"/>
+  <GetTemplate path="Templates/ex7_msg_validcode_response.xml" variable="resp_expected"/>
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK7.IN"/>
+    <Queue objName="TASK7.OUT"/>
+  </ClearQueue>
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK7.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK7.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK7.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="error_message">
+    <Queue objName="TASK7.OUT"/>
+  </GetMessageSimple>
+  
+
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK7.OUT.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="error_message"/>
+  
+  <AssertXmlEqual order="false">
+    <actual variable="error_message"/>
+    <expected variable="resp_expected"/>
+  </AssertXmlEqual>
+  
+
+</Test>
