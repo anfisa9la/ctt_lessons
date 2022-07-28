@@ -1,3 +1,4 @@
 contains_valid=\bvalid\b
 empty_header_error=\bParsing Error: Header values either invalid or empty\b
 no_answer_error = \bNo answer from System\b
+is_available = \bis not available\b

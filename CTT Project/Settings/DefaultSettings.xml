@@ -2,6 +2,9 @@
 
 <GlobalSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="DefaultSettings.xml" xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/globalSettings.xsd">
     <Resources>
+    	<RESTUrl url="http://ctt-stub.apps.ocp.cmx.ru" objName="soap-server"/>
+    	
+    	
         <SoapHttpEndpoint address="http://192.168.15.100:8086" objName="endpoint1"/>
                           
         <QueueManager channel="SYSTEM.DEF.SVRCONN" host="192.168.15.74" name="QMTESTERS1" objName="QM" port="4401">
@@ -28,6 +31,15 @@
     	<Queue manager="QM" objName="TASK5.ERROR" queue="TMP.TASK5.ERROR"/>
     	<Queue manager="QM" objName="TASK5.TO.EXTERNAL.SYSTEM" queue="TMP.TASK5.TO.EXTERNAL.SYSTEM"/>
     	<Queue manager="QM" objName="TASK5.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK5.FROM.EXTERNAL.SYSTEM"/>
+    	
+    	<Queue manager="QM" objName="TASK6.IN" queue="TMP.TASK6.IN"/>
+    	<Queue manager="QM" objName="TASK6.OUT" queue="TMP.TASK6.OUT"/>
+    	<Queue manager="QM" objName="TASK6.ERROR" queue="TMP.TASK6.ERROR"/>
+    	
+    	<Queue manager="QM" objName="TASK7.IN" queue="TMP.TASK7.IN"/>
+    	<Queue manager="QM" objName="TASK7.OUT" queue="TMP.TASK7.OUT"/>
+    	<Queue manager="QM" objName="TASK7.ERROR" queue="TMP.TASK7.ERROR"/>
+    	
     </Resources>
     <LoadRegexp encoding="UTF-8" path="/Mnemonics/Regexp/regexp.txt"/>
 </GlobalSettings>
