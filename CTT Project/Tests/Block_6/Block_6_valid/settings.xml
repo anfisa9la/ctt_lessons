@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Обработка внешней системой валидного запроса" 
+	name="Block_6_valid" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK6.IN
+  3. Получаем сообщение из очереди TASK6.OUT и валидируем его
+    -->
+
+  <GetTemplate path="Templates/ex6_msg1.xml" variable="message"/>
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK6.IN"/>
+    <Queue objName="TASK6.ERROR"/>
+  </ClearQueue>
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK6.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK6.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK6.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK6.OUT"/>
+  </GetMessageSimple>
+  
+
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK6.OUT.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+
+
+</Test>

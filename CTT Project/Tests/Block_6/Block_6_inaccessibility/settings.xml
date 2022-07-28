@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Недоступность внешней системы" 
+	name="Block_6_inaccessability" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK6.IN
+  3. Получаем сообщение из очереди TASK6.ERROR и валидируем его
+    -->
+
+  <GetTemplate path="Templates/ex6_msg1.xml" variable="message"/>
+  <GetTemplate path="Templates/ex6_msg_exsys_not_avail_resp.xml" variable="error_msg_expected"/>
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK6.IN"/>
+    <Queue objName="TASK6.ERROR"/>
+  </ClearQueue>
+  
+    <Log level="info">==========@ Остановка внешней системы.</Log>
+  <PutVariable name="turnOff" value='{"method":"STOP_STUB","id":"1","params":{"stubName":"TASK6.7.[soapExternal]"}}'/>
+  <RESTSendPost objName="soap-server" request="turnOff"  response="respOff">
+  	<requestHeaders>
+  		<header name="Content-Type" value="application/json"/>
+  	</requestHeaders>
+  </RESTSendPost>
+  
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK6.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK6.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK6.ERROR.</Log>
+  <GetMessageSimple maxTime="10000" variable="error_message">
+    <Queue objName="TASK6.ERROR"/>
+  </GetMessageSimple>
+  
+  <Log>#error_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK6.ERROR.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="error_message"/>
+
+  <Match mnemonic="is_available" variable="error_message"/>
+
+</Test>

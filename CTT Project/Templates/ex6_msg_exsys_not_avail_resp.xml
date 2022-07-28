@@ -1,0 +1,11 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/">
+   <soapenv:Body>
+      <soapenv:Fault>
+         <faultcode>external_system</faultcode>
+         <faultstring xml:lang="lang">External system (Web-service) is not available</faultstring>
+         <detail>
+            <fault_desc>External system (Web-service) is not available. There is no Web-services running on specified adress.</fault_desc>
+         </detail>
+      </soapenv:Fault>
+   </soapenv:Body>
+</soapenv:Envelope>
