@@ -41,7 +41,7 @@
     <Queue objName="TASK7.OUT"/>
   </GetMessageSimple>
   
-
+	<Log>#error_message#</Log>
 
   <Log level="info">==========@ Валиация сообщения в очереди TASK7.OUT.</Log>
   <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="error_message"/>
@@ -49,6 +49,9 @@
   <AssertXmlEqual order="false">
     <actual variable="error_message"/>
     <expected variable="resp_expected"/>
+    <exclude logLevel="info">
+        <mnemonic name="TimeStamp"/>    
+    </exclude>
   </AssertXmlEqual>
   
 

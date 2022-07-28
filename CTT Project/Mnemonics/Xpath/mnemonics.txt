@@ -1,1 +1,2 @@
 validation_result=/Transaction-Result/Validation-Result
+TimeStamp=/Transaction-Details/TimeStamp

@@ -16,11 +16,6 @@
 
   <GetTemplate path="Templates/ex7_msg_invalid.xml" variable="message"/>
   <GetTemplate path="Templates/ex7_msg_invalidcode_response.xml" variable="resp_expected"/>
-  
-  
-  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
-  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
-  
 
 
   <Log level="info">==========@ Очистка очередей.</Log>
@@ -44,7 +39,6 @@
 
 
   <Log level="info">==========@ Валиация сообщения в очереди TASK7.ERROR.</Log>
-  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="error_message"/>
   
   <AssertXmlEqual order="false">
     <actual variable="error_message"/>
