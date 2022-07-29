@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка маршрутизации сообщений" 
+	name="Block_7_error" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки с валютой RUB
+  2. Отправляем валидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди TASK9.DOM_PAY_IN и валидируем его
+  4. Проверяем, что остальные очереди пустые
+  5. Меняем в файле валюту на USD 
+  2. Отправляем валидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди TASK9.USD_PAY_IN и валидируем его
+  4. Проверяем, что остальные очереди пустые
+  5. Меняем в файле валюту на EUR
+  2. Отправляем валидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди TASK9.EUR_PAY_IN и валидируем его
+  4. Проверяем, что остальные очереди пустые 
+  5. Меняем в файле валюту
+  2. Отправляем валидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди TASK9.ACR_PAY_IN и валидируем его
+  4. Проверяем, что остальные очереди пустые 
+    -->
+
+  <GetTemplate path="Templates/ex9_msg_rub.xml" variable="message"/>
+
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK9.IN"/>
+    <Queue objName="TASK9.OUT"/>
+    <Queue objName="TASK9.DOM_PAY_IN"/>
+    <Queue objName="TASK9.USD_PAY_IN"/>
+    <Queue objName="TASK9.EUR_PAY_IN"/>
+    <Queue objName="TASK9.ACR_PAY_IN"/>
+  </ClearQueue>
+  
+	<Log level="info">==============@ Начало теста с входными данными RUB.</Log>
+
+  <Log level="info">==========@ Отправка сообщения в TASK9.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK9.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из DOM_PAY_IN.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK9.DOM_PAY_IN"/>
+  </GetMessageSimple>
+  
+	<Log>#out_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди DOM_PAY_IN.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <Log level="info">==========@ Проверка других очередей на отсутствие сообшений .</Log>
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.USD_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди USD_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди USD_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+    <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.EUR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди EUR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди EUR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.ACR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди ACR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди ACR_PAY_IN нет сообщений </Log>
+  </ELSE>
+
+
+
+	<Log level="info">==============@ Начало теста с входными данными USD.</Log>
+	
+	<ChangeTemplate name="message" notSave="true">
+    	<ReplaceValue mnemonic="currency" value="USD"/>
+    </ChangeTemplate>
+
+  <Log level="info">==========@ Отправка сообщения в TASK9.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK9.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из USD_PAY_IN.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK9.USD_PAY_IN"/>
+  </GetMessageSimple>
+  
+	<Log>#out_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди USD_PAY_IN.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <Log level="info">==========@ Проверка других очередей на отсутствие сообшений .</Log>
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.DOM_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди DOM_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди DOM_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+    <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.EUR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди EUR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди EUR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.ACR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди ACR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди ACR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  
+  
+  	<Log level="info">==============@ Начало теста с входными данными EUR.</Log>
+	
+	<ChangeTemplate name="message" notSave="true">
+    	<ReplaceValue mnemonic="currency" value="EUR"/>
+    </ChangeTemplate>
+
+  <Log level="info">==========@ Отправка сообщения в TASK9.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK9.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из EUR_PAY_IN.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK9.EUR_PAY_IN"/>
+  </GetMessageSimple>
+  
+	<Log>#out_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди EUR_PAY_IN.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <Log level="info">==========@ Проверка других очередей на отсутствие сообшений .</Log>
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.DOM_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди DOM_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди DOM_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+    <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.USD_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди EUR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди EUR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.ACR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди ACR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди ACR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  
+  	<Log level="info">==============@ Начало теста с входными данными TRY.</Log>
+	
+	<ChangeTemplate name="message" notSave="true">
+    	<ReplaceValue mnemonic="currency" value="TRY"/>
+    </ChangeTemplate>
+
+  <Log level="info">==========@ Отправка сообщения в TASK9.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK9.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из ACR_PAY_IN.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK9.ACR_PAY_IN"/>
+  </GetMessageSimple>
+  
+	<Log>#out_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди ACR_PAY_IN.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <Log level="info">==========@ Проверка других очередей на отсутствие сообшений .</Log>
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.DOM_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди DOM_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди DOM_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+    <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.EUR_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди EUR_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди EUR_PAY_IN нет сообщений </Log>
+  </ELSE>
+  
+  <GetQueueDepth>
+    <Queue name="message_count" objName="TASK9.USD_PAY_IN"/>
+  </GetQueueDepth>
+  
+  <IF condition="#message_count# != 0">
+    <Log level='fatal'>В очереди USD_PAY_IN есть сообщения </Log>
+  </IF>
+  <ELSE>
+    <Log level='info'> В очереди USD_PAY_IN нет сообщений </Log>
+  </ELSE>
+
+</Test>

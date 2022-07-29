@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка обработки невалидного сообщения" 
+	name="Block_7_error" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Отправляем невалидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди TASK9.OUT и валидируем его
+    -->
+
+  <GetTemplate path="Templates/ex9_msg_invalid.xml" variable="message"/>
+
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK9.IN"/>
+    <Queue objName="TASK9.OUT"/>
+  </ClearQueue>
+
+  <Log level="info">==========@ Отправка сообщения в TASK9.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK9.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK9.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK9.OUT"/>
+  </GetMessageSimple>
+
+  <Log level="info">==========@ Валидация сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="out_message"/>
+
+</Test>

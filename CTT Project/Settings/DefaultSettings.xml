@@ -47,12 +47,12 @@
     	<Queue manager="QM" objName="TASK8.TO.EXTERNAL.SYSTEM" queue="TMP.TASK8.TO.EXTERNAL.SYSTEM"/>
     	<Queue manager="QM" objName="TASK8.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK8.FROM.EXTERNAL.SYSTEM"/>
     	
-    	<Queue manager="QM" objName="TASK9.IN" queue="TMP.TASK9.IN"/>
-    	<Queue manager="QM" objName="TASK9.OUT" queue="TMP.TASK9.OUT"/>
-    	<Queue manager="QM" objName="TASK9.DOM_PAY_IN" queue="TMP.TASK9.DOM_PAY_IN"/>   
-    	<Queue manager="QM" objName="TASK9.USD_PAY_IN" queue="TMP.TASK9.USD_PAY_IN"/>
-    	<Queue manager="QM" objName="TASK9.EUR_PAY_IN" queue="TMP.TASK9.EUR_PAY_IN"/>
-    	<Queue manager="QM" objName="TASK9.ACR_PAY_IN" queue="TMP.TASK9.ACR_PAY_IN"/>	
+    	<Queue manager="QM" objName="TASK9.IN" queue="TASK9.IN"/>
+    	<Queue manager="QM" objName="TASK9.OUT" queue="TASK9.OUT"/>
+    	<Queue manager="QM" objName="TASK9.DOM_PAY_IN" queue="TASK9.DOM_PAY_IN"/>   
+    	<Queue manager="QM" objName="TASK9.USD_PAY_IN" queue="TASK9.USD_PAY_IN"/>
+    	<Queue manager="QM" objName="TASK9.EUR_PAY_IN" queue="TASK9.EUR_PAY_IN"/>
+    	<Queue manager="QM" objName="TASK9.ACR_PAY_IN" queue="TASK9.ACR_PAY_IN"/>	
     	
 		<Database host="192.168.14.73" port="3306" dbName="task8_db" type="mysql" userName="root" userPass="root" objName="DBTask8"/>
     </Resources>

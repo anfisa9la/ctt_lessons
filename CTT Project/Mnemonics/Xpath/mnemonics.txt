@@ -2,3 +2,4 @@ validation_result=/Transaction-Result/Validation-Result
 TimeStamp=/Transaction-Details/TimeStamp
 TimeStamp_error_mes=/Transaction-Result/TimeStamp
 payment_type=/Transaction-Details/Deal-Type
+currency=/Transaction/DealDetails/Currecny
