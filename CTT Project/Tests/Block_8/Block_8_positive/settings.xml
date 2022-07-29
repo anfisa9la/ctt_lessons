@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description=" Логирование в БД успешной обработки сообщения" 
+	name="Block_8_positive" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK8.IN
+  3. 
+    -->
+    
+    
+  <PutVariable name="currency_code" value="RUR"/>
+  <CalculateExpression expression="({sysdate}-2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
+  <CalculateExpression expression="({sysdate}+2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
+
+  <GetTemplate path="Templates/ex8_msg_rub.xml" variable="message"/>
+  <GetTemplate path="Templates/ex8_msg_valid_response.xml" variable="resp_expected"/>
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK8.IN"/>
+    <Queue objName="TASK8.OUT"/>
+  </ClearQueue>
+
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK8.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK8.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK8.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK8.OUT"/>
+  </GetMessageSimple>
+  
+	<Log>#out_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK8.OUT.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <SQLSelect>
+    <Database objName="DBTask8"/>
+    <sql variable="tconfig_result">select PaymentTypes from tconfig where CurrencyCode = '#currency_code#'</sql>
+  </SQLSelect>
+  
+  <AssertEquals mnemonic="payment_type" value="#tconfig_result#" variable="out_message"/>
+  
+  <SQLSelect>
+    <Database objName="DBTask8"/>
+    <sql variable="tlog_count">select count(*) from tlog where time between '#time_from#' and '#time_to#'</sql>    
+    <sql variable="tlog_status">select count(*) from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>
+    <sql variable="tlog_status">select text from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>    
+  </SQLSelect>
+  
+   <AssertEquals logLevel="fatal" value="2" variable="tlog_count"/>
+   <AssertEquals logLevel="fatal" value="2" variable="tlog_status"/>
+ 
+
+</Test>

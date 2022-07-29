@@ -40,7 +40,29 @@
     	<Queue manager="QM" objName="TASK7.OUT" queue="TMP.TASK7.OUT"/>
     	<Queue manager="QM" objName="TASK7.ERROR" queue="TMP.TASK7.ERROR"/>
     	
+    	<Queue manager="QM" objName="TASK8.IN" queue="TMP.TASK8.IN"/>
+    	<Queue manager="QM" objName="TASK8.OUT" queue="TMP.TASK8.OUT"/>
+    	<Queue manager="QM" objName="TASK8.STORE" queue="TMP.TASK8.STORE"/>
+    	<Queue manager="QM" objName="TASK8.ERROR" queue="TMP.TASK8.ERROR"/>
+    	<Queue manager="QM" objName="TASK8.TO.EXTERNAL.SYSTEM" queue="TMP.TASK8.TO.EXTERNAL.SYSTEM"/>
+    	<Queue manager="QM" objName="TASK8.FROM.EXTERNAL.SYSTEM" queue="TMP.TASK8.FROM.EXTERNAL.SYSTEM"/>
+    	
+    	<Queue manager="QM" objName="TASK9.IN" queue="TMP.TASK9.IN"/>
+    	<Queue manager="QM" objName="TASK9.OUT" queue="TMP.TASK9.OUT"/>
+    	<Queue manager="QM" objName="TASK9.DOM_PAY_IN" queue="TMP.TASK9.DOM_PAY_IN"/>   
+    	<Queue manager="QM" objName="TASK9.USD_PAY_IN" queue="TMP.TASK9.USD_PAY_IN"/>
+    	<Queue manager="QM" objName="TASK9.EUR_PAY_IN" queue="TMP.TASK9.EUR_PAY_IN"/>
+    	<Queue manager="QM" objName="TASK9.ACR_PAY_IN" queue="TMP.TASK9.ACR_PAY_IN"/>	
+    	
+		<Database host="192.168.14.73" port="3306" dbName="task8_db" type="mysql" userName="root" userPass="root" objName="DBTask8"/>
     </Resources>
+    
+    
     <LoadRegexp encoding="UTF-8" path="/Mnemonics/Regexp/regexp.txt"/>
     <LoadXpath encoding="UTF-8" path="/Mnemonics/Xpath/mnemonics.txt"/>
+
+    <Libraries>
+    	<path>Lib/mysql-connector-java-5.1.47-bin.jar</path>
+    </Libraries>     
+          
 </GlobalSettings>

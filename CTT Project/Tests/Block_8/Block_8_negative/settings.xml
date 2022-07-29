@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description=" Логирование в БД успешной обработки сообщения" 
+	name="Block_8_positive" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK8.IN
+  3. 
+    -->
+    
+    
+  <PutVariable name="currency_code" value="RUB"/>
+  <CalculateExpression expression="({sysdate}-2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
+  <CalculateExpression expression="({sysdate}+2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
+
+  <GetTemplate path="Templates/ex8_invalid.xml" variable="message"/>
+  
+<Log>#time_from#</Log>
+<Log>#time_to#</Log>
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK8.IN"/>
+    <Queue objName="TASK8.ERROR"/>
+  </ClearQueue>
+
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK8.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK8.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK8.ERROR.</Log>
+  <GetMessageSimple maxTime="10000" variable="error_message">
+    <Queue objName="TASK8.ERROR"/>
+  </GetMessageSimple>
+  
+	<Log>#error_message#</Log>
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK8.ERROR.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="error_message"/>
+  
+  
+  <SQLSelect>
+    <Database objName="DBTask8"/>
+    <sql variable="tlog_result">select count(*) from tlog where status = 'error' and time between '#time_from#' and '#time_to#'</sql>
+  </SQLSelect>
+  
+   <AssertEquals logLevel="fatal" value="1" variable="tlog_result"/>
+ 
+
+</Test>
