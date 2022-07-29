@@ -56,7 +56,7 @@
     	
     	
     	<Queue manager="QM" objName="TASK10.IN" queue="TMP.TASK10.IN"/>
-    	<Queue manager="QM" objName="TASK10.OUT" queue="TMP.TASK10.OUT"/>
+    	<Queue manager="QM" objName="TASK10.ERROR" queue="TMP.TASK10.ERROR"/>
     	<Queue manager="QM" objName="TASK10.TO.EXTERNAL.SYSTEM" queue="TMP.TASK10.TO.EXTERNAL.SYSTEM"/>
     	
 		<Database host="192.168.14.73" port="3306" dbName="task8_db" type="mysql" userName="root" userPass="root" objName="DBTask8"/>
