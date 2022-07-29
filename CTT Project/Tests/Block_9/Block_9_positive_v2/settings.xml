@@ -57,7 +57,28 @@
   			</GetMessageSimple>
   			
 		<Log level="info">==========@ Валиация сообщения в очереди #queue#.</Log>
-		<ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>	
+		<ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+		
+		<CreateList addIfNotEqual="#queue#" variable="queue_to_check">
+			<Add value="TASK9.DOM_PAY_IN"/>
+			<Add value="TASK9.USD_PAY_IN"/>
+			<Add value="TASK9.EUR_PAY_IN"/>
+			<Add value="TASK9.ACR_PAY_IN"/>
+		</CreateList>	
+		
+			<ForEach mapOrList="queue_to_check" value="value">
+    		<Log level="info">==========@ Проверка очереди #queue#.</Log>
+    			<GetQueueDepth>
+    				<Queue name="message_count" objName="#queue#"/>
+  				</GetQueueDepth>
+  
+				<IF condition="#message_count# != 0">
+					<Log level='fatal'>В очереди #queue# есть сообщения </Log>
+				</IF>
+				<ELSE>
+					<Log level='info'> В очереди #queue# нет сообщений </Log>
+				</ELSE>
+			</ForEach>
   		
 	</ForEach>
 
