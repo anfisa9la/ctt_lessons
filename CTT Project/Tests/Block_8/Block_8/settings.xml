@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка обработки системой сообщений при внесении изменений в настроечную таблицу" 
+	name="Block_8" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки 
+  2. Отправляем валидное сообщение в очередь TASK8.IN
+  3. Проверяем записи в бд в таблицах tconfig и tlog
+    -->
+    
+    
+   <ClearTable>
+    <Database objName="DBTask8">
+        <Table>tlog</Table>
+    </Database>
+</ClearTable>
+    
+  <PutVariable name="currency_code" value="GBP"/>
+  <CalculateExpression expression="({sysdate}-00:00:01:00~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
+  <CalculateExpression expression="({sysdate}+00:00:01:00~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
+
+  <GetTemplate path="Templates/ex8_msg_rub.xml" variable="message"/>
+
+  	<ChangeTemplate name="message" notSave="true">
+    	<ReplaceValue mnemonic="currency" value="#currency_code#"/>
+    </ChangeTemplate>
+    
+    
+  <Log level="info">==========@ Добавление записи в бд.</Log>
+	<SQLUpdate>
+	    <Database objName="DBTask8"/>
+	    <sql>INSERT INTO tconfig (PaymentTypes,CurrencyCode) VALUES ("NewType", "#currency_code#")</sql>
+	</SQLUpdate>
+  
+  
+  <Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+  
+
+
+  <Log level="info">==========@ Очистка очередей.</Log>
+  <ClearQueue clearMethod="CLEAR">
+    <Queue objName="TASK8.IN"/>
+    <Queue objName="TASK8.OUT"/>
+  </ClearQueue>
+
+  
+
+  <Log level="info">==========@ Отправка сообщения в TASK8.IN.</Log>
+  <SendMessage variable="message">
+    <Queue objName="TASK8.IN"/>
+  </SendMessage>
+  
+  
+  <Log level="info">==========@ Получение сообщения из TASK8.OUT.</Log>
+  <GetMessageSimple maxTime="10000" variable="out_message">
+    <Queue objName="TASK8.OUT"/>
+  </GetMessageSimple>
+  
+
+  <Log level="info">==========@ Валиация сообщения в очереди TASK8.OUT.</Log>
+  <ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>
+  
+  
+  <Log level="info">==========@ Проверка записей в бд.</Log>  
+  <SQLSelect>
+    <Database objName="DBTask8"/>
+    <sql variable="tlog_count">select count(*) from tlog where time between '#time_from#' and '#time_to#'</sql>    
+    <sql variable="tlog_status">select count(*) from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>   
+  </SQLSelect>
+  
+   <AssertEquals logLevel="fatal" value="1" variable="tlog_count"/>
+   <AssertEquals logLevel="fatal" value="1" variable="tlog_status"/>
+   
+   
+  <Log level="info">==========@ Удаление записи в бд.</Log> 
+ 	<SQLUpdate>
+	    <Database objName="DBTask8"/>
+	    <sql>DELETE FROM tconfig where CurrencyCode = "#currency_code#")</sql>
+	</SQLUpdate>
+	
+	<SQLSelect>
+    	<Database objName="DBTask8"/>
+    	<sql variable="tlog_count">select count(*) from tconfig where CurrencyCode = "#currency_code#"</sql>    
+	</SQLSelect>
+	
+	<AssertEquals logLevel="fatal" value="0" variable="tlog_count"/>
+
+</Test>

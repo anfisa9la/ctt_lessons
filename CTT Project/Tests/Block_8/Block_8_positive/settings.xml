@@ -11,13 +11,13 @@
   Тест-Кейс: 
   1. Сохраняем файл для отправки 
   2. Отправляем валидное сообщение в очередь TASK8.IN
-  3. 
+  3. Проверяем записи в бд в таблицах tconfig и tlog
     -->
     
     
   <PutVariable name="currency_code" value="RUR"/>
-  <CalculateExpression expression="({sysdate}-2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
-  <CalculateExpression expression="({sysdate}+2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
+  <CalculateExpression expression="({sysdate}-00:00:00:30~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
+  <CalculateExpression expression="({sysdate}+00:00:00:30~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
 
   <GetTemplate path="Templates/ex8_msg_rub.xml" variable="message"/>
   <GetTemplate path="Templates/ex8_msg_valid_response.xml" variable="resp_expected"/>
@@ -63,8 +63,7 @@
   <SQLSelect>
     <Database objName="DBTask8"/>
     <sql variable="tlog_count">select count(*) from tlog where time between '#time_from#' and '#time_to#'</sql>    
-    <sql variable="tlog_status">select count(*) from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>
-    <sql variable="tlog_status">select text from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>    
+    <sql variable="tlog_status">select count(*) from tlog where status =  'success' and time between '#time_from#' and '#time_to#'</sql>    
   </SQLSelect>
   
    <AssertEquals logLevel="fatal" value="2" variable="tlog_count"/>

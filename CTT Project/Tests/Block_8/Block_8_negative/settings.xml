@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	description=" Логирование в БД успешной обработки сообщения" 
-	name="Block_8_positive" 
+	description=" Логирование в БД неуспешной обработки сообщения" 
+	name="Block_8_тупфешму" 
 	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
 
   <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
@@ -10,19 +10,17 @@
   <!-- 
   Тест-Кейс: 
   1. Сохраняем файл для отправки 
-  2. Отправляем валидное сообщение в очередь TASK8.IN
-  3. 
+  2. Отправляем невалидное сообщение в очередь TASK8.IN
+  3. Проверяем таблицу tlog в бд
     -->
     
     
   <PutVariable name="currency_code" value="RUB"/>
-  <CalculateExpression expression="({sysdate}-2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
-  <CalculateExpression expression="({sysdate}+2@mm)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
+  <CalculateExpression expression="({sysdate}-00:00:01:00~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_from"/>
+  <CalculateExpression expression="({sysdate}+00:00:01:00~dd:HH:mm:ss)$yyyy:MM:dd HH:mm:ss" varName="time_to"/>
 
   <GetTemplate path="Templates/ex8_invalid.xml" variable="message"/>
   
-<Log>#time_from#</Log>
-<Log>#time_to#</Log>
 
   <Log level="info">==========@ Очистка очередей.</Log>
   <ClearQueue clearMethod="CLEAR">
