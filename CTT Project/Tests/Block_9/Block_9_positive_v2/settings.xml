@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка маршрутизации сообщений" 
+	name="Block_7_error" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+
+  <Log level="info">==========@ Запущен тест кейс #$Test_name$#.</Log>
+
+  <!-- 
+  Тест-Кейс: 
+  1. Сохраняем файл для отправки с валютой
+  2. Отправляем валидное сообщение в очередь TASK9.IN
+  3. Получаем сообщение из очереди и валидируем
+    -->
+    
+    
+	<GetTemplate path="Templates/ex9_msg_rub.xml" variable="message"/>
+
+  
+	<Log level="info">==========@ Валидация отправляемого в сервис сообщения.</Log>
+	<ValidateXmlDocument schemaPath="XSD/Transaction.xsd" variable="message"/>
+	
+	<Log level="info">==========@ Очистка очередей.</Log>
+ 	<ClearQueue clearMethod="CLEAR">
+    	<Queue objName="TASK9.IN"/>
+    	<Queue objName="TASK9.OUT"/>
+    	<Queue objName="TASK9.DOM_PAY_IN"/>
+    	<Queue objName="TASK9.USD_PAY_IN"/>
+    	<Queue objName="TASK9.EUR_PAY_IN"/>
+    	<Queue objName="TASK9.ACR_PAY_IN"/>
+  	</ClearQueue>
+  	
+    
+	<CreateMap variable="currencies">
+		<Add key="TASK9.DOM_PAY_IN" value="RUB"/>
+		<Add key="TASK9.USD_PAY_IN" value="USD"/>
+		<Add key="TASK9.EUR_PAY_IN" value="EUR"/>
+		<Add key="TASK9.ACR_PAY_IN" value="TRY"/>
+	</CreateMap>
+
+
+	<ForEach mapOrList="currencies" value="currency" key="queue">
+    	<Log level="info">==========@ Test running: #queue#, #currency#.</Log>
+    	
+    	<ChangeTemplate name="message" notSave="true">
+    		<ReplaceValue mnemonic="currency" value="#currency#"/>
+    	</ChangeTemplate>
+    	
+    	<SendMessage variable="message">
+    		<Queue objName="TASK9.IN"/>
+  		</SendMessage>
+  		
+  		<Log level="info">==========@ Получение сообщения из #queue#.</Log>
+			<GetMessageSimple maxTime="10000" variable="out_message">
+    			<Queue objName="#queue#"/>
+  			</GetMessageSimple>
+  			
+		<Log level="info">==========@ Валиация сообщения в очереди #queue#.</Log>
+		<ValidateXmlDocument schemaPath="XSD/Transaction-Details.xsd" variable="out_message"/>	
+  		
+	</ForEach>
+
+</Test>
