@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка преобразования сообщения в формат CSV" 
+	name="Block_10_positive_case" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+	
+	
+	<GetTemplate variable="message" path="Templates/ex10_msg1.xml"/>
+	<ReadFile variable="expected_result" path="Templates/ex10_msg1_valid_response"/>
+	
+	
+	<Log level="info">==========@ Очистка очередей.</Log>
+	<ClearQueue>
+		<Queue objName="TASK10.IN"/>
+		<Queue objName="TASK10.TO.EXTERNAL.SYSTEM"/>
+	</ClearQueue>
+	
+	
+	
+	<Log level="info">==========@ Отправка сообщения.</Log>
+	<SendMessage variable="message">
+		<Queue objName="TASK10.IN"/>
+	</SendMessage>
+	
+	
+	<Log level="info">==========@ Получение сообщения.</Log>
+	<GetMessageSimple variable="out_message" maxTime="50000" isXML="false">
+		<Queue objName="TASK10.TO.EXTERNAL.SYSTEM"/>
+	</GetMessageSimple>
+	
+	<CalculateExpression expression="#out_message#.replace('Deal-Currecny3216736241235', 'Deal-Currecny\n3216736241235')" forceJavaScript="true"
+                     useVariables="true" varName="actual_result"/>
+                     
+    <StringReplace method="replaceAll" inValue="#actual_result#" replacement="0000-00-00" outVariable="actual_result" target="(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"/>
+	<StringReplace method="replaceAll" inValue="#actual_result#" replacement="00:00:00" outVariable="actual_result" target="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)"/>
+	                     
+    <StringReplace method="replaceAll" inValue="#expected_result#" replacement="0000-00-00" outVariable="expected_result" target="(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])"/>
+	<StringReplace method="replaceAll" inValue="#expected_result#" replacement="00:00:00" outVariable="expected_result" target="(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)"/>
+    
+                     
+    <Log level="info">==========@ RESULTS.</Log>
+    <Log>#expected_result#</Log>
+    <Log>#actual_result#</Log>
+                     
+    <AssertEquals value="#expected_result#" variable="actual_result"></AssertEquals>
+	
+	
+	
+</Test>

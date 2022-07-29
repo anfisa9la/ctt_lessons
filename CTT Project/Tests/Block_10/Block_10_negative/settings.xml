@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Test xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	description="Проверка обработки невалидного запроса." 
+	name="Block_10_positive_case" 
+	xsi:noNamespaceSchemaLocation="http://ctt.cinimex.ru/testSettings.xsd">
+	
+	
+	<GetTemplate variable="message" path="Templates/ex10_msg1_invalid.xml"/>
+	
+	
+	<Log level="info">==========@ Очистка очередей.</Log>
+	<ClearQueue>
+		<Queue objName="TASK10.IN"/>
+		<Queue objName="TASK10.ERROR"/>
+	</ClearQueue>
+	
+	
+	
+	<Log level="info">==========@ Отправка сообщения.</Log>
+	<SendMessage variable="message">
+		<Queue objName="TASK10.IN"/>
+	</SendMessage>
+	
+	
+	<Log level="info">==========@ Получение сообщения.</Log>
+	<GetMessageSimple variable="error_message" maxTime="50000" isXML="false">
+		<Queue objName="TASK10.ERROR"/>
+	</GetMessageSimple>
+	
+	<Log level="info">==========@ Проверка сообщения.</Log>
+	<ValidateXmlDocument schemaPath="XSD/Transaction-Result.xsd" variable="error_message"/>
+
+</Test>
